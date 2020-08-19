@@ -41,35 +41,20 @@ Private Sub StyleFallback(ByVal CellRange As Range, StyleName As String)
         'Background style
         .Interior.Color = ThisWorkbook.Styles(StyleName).Interior.Color
         .Interior.Pattern = ThisWorkbook.Styles(StyleName).Interior.Pattern
-        'Doing Borders without specification may seem to result in wrong appliction of the style in some cases, thus doing it for each border separately
-        'Color
-        .Borders(xlLeft).Color = ThisWorkbook.Styles(StyleName).Borders(xlLeft).Color
-        .Borders(xlTop).Color = ThisWorkbook.Styles(StyleName).Borders(xlTop).Color
-        .Borders(xlRight).Color = ThisWorkbook.Styles(StyleName).Borders(xlRight).Color
-        .Borders(xlBottom).Color = ThisWorkbook.Styles(StyleName).Borders(xlBottom).Color
-        .Borders(xlDiagonalDown).Color = ThisWorkbook.Styles(StyleName).Borders(xlDiagonalDown).Color
-        .Borders(xlDiagonalUp).Color = ThisWorkbook.Styles(StyleName).Borders(xlDiagonalUp).Color
-        .Borders(xlInsideHorizontal).Color = ThisWorkbook.Styles(StyleName).Borders(xlInsideHorizontal).Color
-        .Borders(xlInsideVertical).Color = ThisWorkbook.Styles(StyleName).Borders(xlInsideVertical).Color
-        'Weight
-        .Borders(xlLeft).Weight = ThisWorkbook.Styles(StyleName).Borders(xlLeft).Weight
-        .Borders(xlTop).Weight = ThisWorkbook.Styles(StyleName).Borders(xlTop).Weight
-        .Borders(xlRight).Weight = ThisWorkbook.Styles(StyleName).Borders(xlRight).Weight
-        .Borders(xlBottom).Weight = ThisWorkbook.Styles(StyleName).Borders(xlBottom).Weight
-        .Borders(xlDiagonalDown).Weight = ThisWorkbook.Styles(StyleName).Borders(xlDiagonalDown).Weight
-        .Borders(xlDiagonalUp).Weight = ThisWorkbook.Styles(StyleName).Borders(xlDiagonalUp).Weight
-        .Borders(xlInsideHorizontal).Weight = ThisWorkbook.Styles(StyleName).Borders(xlInsideHorizontal).Weight
-        .Borders(xlInsideVertical).Weight = ThisWorkbook.Styles(StyleName).Borders(xlInsideVertical).Weight
-        'LineStyle
-        'Needs to be applied last or it may add borders, where there are none
-        .Borders(xlLeft).LineStyle = ThisWorkbook.Styles(StyleName).Borders(xlLeft).LineStyle
-        .Borders(xlTop).LineStyle = ThisWorkbook.Styles(StyleName).Borders(xlTop).LineStyle
-        .Borders(xlRight).LineStyle = ThisWorkbook.Styles(StyleName).Borders(xlRight).LineStyle
-        .Borders(xlBottom).LineStyle = ThisWorkbook.Styles(StyleName).Borders(xlBottom).LineStyle
-        .Borders(xlDiagonalDown).LineStyle = ThisWorkbook.Styles(StyleName).Borders(xlDiagonalDown).LineStyle
-        .Borders(xlDiagonalUp).LineStyle = ThisWorkbook.Styles(StyleName).Borders(xlDiagonalUp).LineStyle
-        .Borders(xlInsideHorizontal).LineStyle = ThisWorkbook.Styles(StyleName).Borders(xlInsideHorizontal).LineStyle
-        .Borders(xlInsideVertical).LineStyle = ThisWorkbook.Styles(StyleName).Borders(xlInsideVertical).LineStyle
+        'Doing Borders without specification may seem to result in wrong application of the style in some cases, thus doing it for each border separately
+        'Also doing them in a loop with some checks for a small optimization
+        Dim ArrayElement As Variant
+        For Each ArrayElement In Array(xlLeft, xlTop, xlRight, xlBottom, xlDiagonalDown, xlDiagonalUp, xlInsideHorizontal, xlInsideVertical)
+            'Line style first
+            .Borders(ArrayElement).LineStyle = ThisWorkbook.Styles(StyleName).Borders(ArrayElement).LineStyle
+            'Check if it's not "no border", because if it is and we apply color or weight, it will change to Thin
+            If .Borders(ArrayElement).LineStyle <> xlLineStyleNone Then
+                'Color
+                .Borders(ArrayElement).Color = ThisWorkbook.Styles(StyleName).Borders(ArrayElement).Color
+                'Weight
+                .Borders(ArrayElement).Weight = ThisWorkbook.Styles(StyleName).Borders(ArrayElement).Weight
+            End If
+        Next ArrayElement
         'Formatting
         .NumberFormat = ThisWorkbook.Styles(StyleName).NumberFormat
         .NumberFormatLocal = ThisWorkbook.Styles(StyleName).NumberFormatLocal
