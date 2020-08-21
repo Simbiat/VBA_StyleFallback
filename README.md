@@ -1,3 +1,3 @@
 # VBA_StyleFallback
-Excel has a very useful functionallity called "Styles", which can be used to apply multiple styling effects (fonts, colors) at once. Unfotunately, it can't be used in shared workbooks. Luckily, VBA allows for a workaround: while you can't "apply" the style, you can get its values and apply them to the cells normally.
+Excel has a very useful functionallity called "Styles", which can be used to apply multiple styling effects (fonts, colors) at once. Unfotunately, it can't be used on sheets where you protect cells from being styled. Luckily, VBA allows for a workaround: while you can't "apply" the style, you can get its values and apply them to the cells normally.
 This function does exactly that: it tries to use proper Style application logic, but in case of failure falls back to applying all those settings directly. While it works, be warned, that it's not as optimized and may signifficantly slow down your macro, thus use with caution.
